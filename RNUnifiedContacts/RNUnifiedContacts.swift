@@ -125,14 +125,33 @@ class RNUnifiedContacts: NSObject {
             callback(result)
         }
     }
+  
+    @objc func getContainers(_ callback: (NSArray) -> ()) -> Void {
+        let contactStore = CNContactStore()
+        do {
+            var cnContainers = [CNContainer]()
+            try cnContainers = contactStore.containers(matching: nil)
+            var containers = [NSDictionary]();
+            for cnContainer in cnContainers {
+                containers.append( convertCNContainerToDictionary(cnContainer) )
+            }
+
+            callback([NSNull(), containers])
+        } catch let error as NSError {
+            NSLog("Problem getting containers.")
+            NSLog(error.localizedDescription)
+
+            callback([error.localizedDescription, NSNull()])
+        }
+    }
 
     @objc func getGroups(_ callback: (NSArray) -> ()) -> Void {
         let contactStore = CNContactStore()
         do {
             var cNGroups = [CNGroup]()
-
+            var cnContainers = [CNContainer]()
             try cNGroups = contactStore.groups(matching: nil)
-
+            try cnContainers = contactStore.containers(matching: nil)
             var groups = [NSDictionary]();
             for cNGroup in cNGroups {
                 groups.append( convertCNGroupToDictionary(cNGroup) )
@@ -153,6 +172,35 @@ class RNUnifiedContacts: NSObject {
         var cNContacts = [CNContact]()
 
         let predicate = CNContact.predicateForContactsInGroup(withIdentifier: identifier)
+        let fetchRequest = CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])
+
+        fetchRequest.predicate = predicate
+        fetchRequest.sortOrder = CNContactSortOrder.userDefault
+
+        try contactStore.enumerateContacts(with: fetchRequest) { (cNContact, pointer) -> Void in
+          cNContacts.append(cNContact)
+        }
+
+        var contacts = [NSDictionary]();
+        for cNContact in cNContacts {
+          contacts.append( convertCNContactToDictionary(cNContact) )
+        }
+
+        callback([NSNull(), contacts])
+      } catch let error as NSError {
+        NSLog("Problem getting contacts.")
+        NSLog(error.localizedDescription)
+
+        callback([error.localizedDescription, NSNull()])
+      }
+    }
+  
+    @objc func contactsInContainer(_ identifier: String, callback: (NSArray) -> ()) -> Void {
+      let contactStore = CNContactStore()
+      do {
+        var cNContacts = [CNContact]()
+
+        let predicate = CNContact.predicateForContactsInContainer(withIdentifier: identifier)
         let fetchRequest = CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])
 
         fetchRequest.predicate = predicate
@@ -472,6 +520,29 @@ class RNUnifiedContacts: NSObject {
         callback( [error.localizedDescription, false] )
       }
     }
+  
+    @objc func addContactsToContainer(_ identifier: String, contactIdentifiers: [NSString], callback: (NSArray) -> () ) -> Void {
+      let contactStore = CNContactStore()
+      let saveRequest = CNSaveRequest()
+
+      do {
+        for contactIdentifier in contactIdentifiers {
+          let cNContact = getCNContact(contactIdentifier as String, keysToFetch: keysToFetch as [CNKeyDescriptor])
+          let mutableContact = cNContact!.mutableCopy() as! CNMutableContact
+
+          saveRequest.add(mutableContact, toContainerWithIdentifier:identifier)
+        }
+
+        try contactStore.execute(saveRequest)
+        callback( [NSNull(), true] )
+      }
+      catch let error as NSError {
+        NSLog("Problem adding contacts to container with identifier: " + identifier)
+        NSLog(error.localizedDescription)
+
+        callback( [error.localizedDescription, false] )
+      }
+    }
 
     @objc func removeContactsFromGroup(_ identifier: String, contactIdentifiers: [NSString], callback: (NSArray) -> () ) -> Void {
       let contactStore = CNContactStore()
@@ -525,6 +596,19 @@ class RNUnifiedContacts: NSObject {
         return nil
       }
     }
+  
+    func getCNContainer( _ identifier: String ) -> CNContainer? {
+      let contactStore = CNContactStore()
+      do {
+        let predicate = CNContainer.predicateForContainers(withIdentifiers: [identifier])
+        let cNContainer = try contactStore.containers(matching: predicate).first
+        return cNContainer
+      } catch let error as NSError {
+        NSLog("Problem getting container with identifier: " + identifier)
+        NSLog(error.localizedDescription)
+        return nil
+      }
+    }
 
     func contactContainsText( _ cNContact: CNContact, searchText: String ) -> Bool {
         let searchText   = searchText.lowercased();
@@ -567,6 +651,15 @@ class RNUnifiedContacts: NSObject {
         addString(&group, key: "name", value: cNGroup.name)
 
         return group as NSDictionary
+    }
+  
+    func convertCNContainerToDictionary(_ cNContainer: CNContainer) -> NSDictionary {
+        var container = [String: Any]()
+
+        addString(&container, key: "identifier", value: cNContainer.identifier)
+        addString(&container, key: "name", value: cNContainer.name)
+
+        return container as NSDictionary
     }
 
     func convertCNContactToDictionary(_ cNContact: CNContact) -> NSDictionary {

@@ -73,6 +73,11 @@ RCT_EXTERN_METHOD(addContactsToGroup:(NSString *)identifier contactIdentifiers:(
 
 RCT_EXTERN_METHOD(removeContactsFromGroup:(NSString *)identifier contactIdentifiers:(NSArray *)contactIdentifiers callback:(RCTResponseSenderBlock)callback);
 
+// Containers
+RCT_EXTERN_METHOD(getContainers:(RCTResponseSenderBlock)callback);
+RCT_EXTERN_METHOD(contactsInContainer:(NSString *)identifier callback:(RCTResponseSenderBlock)callback);
+RCT_EXTERN_METHOD(addContactsToContainer:(NSString *)identifier contactIdentifiers:(NSArray *)contactIdentifiers callback:(RCTResponseSenderBlock)callback);
+
 // Generic
 RCT_EXTERN_METHOD(userCanAccessContacts:(RCTResponseSenderBlock)callback);
 
