@@ -50,7 +50,7 @@ RCT_EXTERN_METHOD(getContacts:(RCTResponseSenderBlock)callback);
 
 RCT_EXTERN_METHOD(searchContacts:(NSString *)searchText callback:(RCTResponseSenderBlock)callback);
 
-RCT_EXTERN_METHOD(addContact:(NSDictionary *)contactData callback:(RCTResponseSenderBlock)callback);
+RCT_EXTERN_METHOD(addContact:(NSString *)containerIdentifier contactData:(NSDictionary *)contactData callback:(RCTResponseSenderBlock)callback);
 
 RCT_EXTERN_METHOD(updateContact:(NSString *)identifier contactData:(NSDictionary *)contactData callback:(RCTResponseSenderBlock)callback);
 

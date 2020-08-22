@@ -259,7 +259,7 @@ class RNUnifiedContacts: NSObject {
         }
     }
 
-    @objc func addContact(_ contactData: NSDictionary, callback: (NSArray) -> () ) -> Void {
+    @objc func addContact(_ containerIdentifier: String, contactData: NSDictionary, callback: (NSArray) -> () ) -> Void {
 
         let contactStore   = CNContactStore()
         let mutableContact = CNMutableContact()
@@ -299,7 +299,7 @@ class RNUnifiedContacts: NSObject {
 
         do {
 
-            saveRequest.add(mutableContact, toContainerWithIdentifier:nil)
+            saveRequest.add(mutableContact, toContainerWithIdentifier:containerIdentifier)
 
             try contactStore.execute(saveRequest)
 
