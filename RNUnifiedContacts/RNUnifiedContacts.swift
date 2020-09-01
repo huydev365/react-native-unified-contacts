@@ -658,6 +658,7 @@ class RNUnifiedContacts: NSObject {
 
         addString(&container, key: "identifier", value: cNContainer.identifier)
         addString(&container, key: "name", value: cNContainer.name)
+        addString(&container, key: "externalIdentifier", value: cNContainer.value(forKey: "externalIdentifier") as? String)
 
         return container as NSDictionary
     }
