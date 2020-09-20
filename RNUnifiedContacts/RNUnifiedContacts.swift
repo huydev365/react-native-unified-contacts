@@ -278,6 +278,10 @@ class RNUnifiedContacts: NSObject {
         if (contactData["organizationName"] != nil) {
             mutableContact.organizationName = contactData["organizationName"] as! String
         }
+        
+        if (contactData["imageData"] != nil) {
+            mutableContact.imageData = Data(base64Encoded: contactData["imageData"] as! String)
+        }
 
         for phoneNumber in contactData["phoneNumbers"] as! NSArray {
             let phoneNumberAsCNLabeledValue = convertPhoneNumberToCNLabeledValue( phoneNumber as! NSDictionary )
