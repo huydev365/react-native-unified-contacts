@@ -653,7 +653,7 @@ class RNUnifiedContacts: NSObject {
 
         addString(&group, key: "identifier", value: cNGroup.identifier)
         addString(&group, key: "name", value: cNGroup.name)
-        addString(&group, key: "externalIdentifier", value: cNGroup.value(forKey: "externalIdentifier") as? String)
+        addString(&group, key: "externalIdentifier", value: try? cNGroup.value(forKey: "externalIdentifier") as? String)
         return group as NSDictionary
     }
   
@@ -662,7 +662,7 @@ class RNUnifiedContacts: NSObject {
 
         addString(&container, key: "identifier", value: cNContainer.identifier)
         addString(&container, key: "name", value: cNContainer.name)
-        addString(&container, key: "externalIdentifier", value: cNContainer.value(forKey: "externalIdentifier") as? String)
+        addString(&container, key: "externalIdentifier", value: try? cNContainer.value(forKey: "externalIdentifier") as? String)
 
         return container as NSDictionary
     }
