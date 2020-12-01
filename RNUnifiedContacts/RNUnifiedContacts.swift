@@ -890,11 +890,11 @@ class RNUnifiedContacts: NSObject {
         }
 
         let mutableAddress = CNMutablePostalAddress()
-        mutableAddress.street = postalAddress["street"] as! String
-        mutableAddress.city = postalAddress["city"] as! String
-        mutableAddress.state = postalAddress["state"] as! String
-        mutableAddress.postalCode = postalAddress["postalCode"] as! String
-        mutableAddress.country = postalAddress["country"] as! String
+        mutableAddress.street = postalAddress["street"] as? String ?? ""
+        mutableAddress.city = postalAddress["city"] as? String ?? ""
+        mutableAddress.state = postalAddress["state"] as? String ?? ""
+        mutableAddress.postalCode = postalAddress["postalCode"] as? String ?? ""
+        mutableAddress.country = postalAddress["country"] as? String ?? ""
  
         return CNLabeledValue(
             label: formattedLabel,
