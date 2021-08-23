@@ -666,7 +666,6 @@ class RNUnifiedContacts: NSObject {
 
         addString(&group, key: "identifier", value: cNGroup.identifier)
         addString(&group, key: "name", value: cNGroup.name)
-        addString(&group, key: "externalIdentifier", value: try? cNGroup.value(forKey: "externalIdentifier") as? String)
         return group as NSDictionary
     }
   
