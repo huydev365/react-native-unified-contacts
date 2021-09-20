@@ -11,6 +11,12 @@ import Foundation
 
 @available(iOS 9.0, *)
 @objc(RNUnifiedContacts)
+extension NSObject {
+    @objc
+    func value(forUndefinedKey key: String) -> Any {
+        return ""
+    }
+}
 class RNUnifiedContacts: NSObject {
 
     //  iOS Reference: https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContact_Class/#//apple_ref/doc/constant_group/Metadata_Keys
@@ -674,7 +680,7 @@ class RNUnifiedContacts: NSObject {
 
         addString(&container, key: "identifier", value: cNContainer.identifier)
         addString(&container, key: "name", value: cNContainer.name)
-        addString(&container, key: "externalIdentifier", value: try? cNContainer.value(forKey: "externalIdentifier") as? String)
+        addString(&container, key: "externalIdentifier", value: cNContainer.value(forKey: "externalIdentifier") as? String)
 
         return container as NSDictionary
     }
