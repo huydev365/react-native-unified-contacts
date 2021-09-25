@@ -9,14 +9,15 @@ import Contacts
 import ContactsUI
 import Foundation
 
-@available(iOS 9.0, *)
-@objc(RNUnifiedContacts)
 extension NSObject {
-    @objc
-    func value(forUndefinedKey key: String) -> Any {
+    @objc func value(forUndefinedKey key: String) -> Any {
         return ""
     }
 }
+
+@available(iOS 9.0, *)
+@objc(RNUnifiedContacts)
+
 class RNUnifiedContacts: NSObject {
 
     //  iOS Reference: https://developer.apple.com/library/ios/documentation/Contacts/Reference/CNContact_Class/#//apple_ref/doc/constant_group/Metadata_Keys
